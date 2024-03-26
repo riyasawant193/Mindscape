@@ -6,35 +6,59 @@
     <title>Import Materials</title>
     <style>
         body {
-            background-color: #123456;
             color: #ffffff;
-            font-family: Arial, sans-serif;
+            font-family: Poppins, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
-            align-items: center;
+            align-items: right;
             justify-content: center;
+            position: relative; 
             height: 100vh;
         }
+        
+        .image {
+            width: 100vw; /* Set the width to cover the entire viewport */
+            height: auto; /* Maintain aspect ratio */
+            transition: transform 1.1s ease-in-out;
+            transition-delay: 0.4s;
+        }        
 
         #container {
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 12px;
+            padding: 20px;
             text-align: center;
-            max-width: 500px; /* Set maximum width for the container */
-            width: 80%; /* Make the container width 100% */
-            height: 50vh; /* Set the height to 80% of the viewport height */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            height: 400px;
+            width: 700px;
+            gap: 20px;
+            z-index: 10;
             justify-content: center;
+            position: absolute; /* Set absolute positioning for the container */
+            top: 50%; /* Position the container at the vertical center */
+            left: 30%; /* Position the container at the horizontal center */
+            transform: translate(-50%, -50%); /* Center the container */
+            opacity: 0.9; 
+            display: flex; /* Set display to flex */
+            flex-direction: row; /* Align children vertically */
+            align-items: left; /* Align children horizontally */
         }
 
-        h1 {
-            margin-bottom: 20px;
-            color: #000000;
+        .card {
+            height: 400px;
+            width: 100%; /* Adjust the width to make the cards narrower */
+            background-color: #4361EE;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            padding: 20px;
+            transition: transform 0.5s ease-in-out;
+            margin: 0 10px; /* Add margin to create spacing between cards */
         }
+
+        h4 {
+            color: #ffffff;
+        }
+
 
         button {
             font-size: 18px;
@@ -43,21 +67,52 @@
             cursor: pointer;
             border: none;
             border-radius: 4px;
-            background-color: #009688;
-            color: #ffffff;
+            background-color: #00D8EF;
+            color: #000000;
             transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #00796b;
+            background-color: #00D8EE;
+        }
+
+        .image2 {
+            width: 100%; /* Set the image width to fill the container */
+            max-width: 50%;
+            height: auto; /* Maintain aspect ratio */
+            margin-top: 20px; /* Adjust margin as needed */
+        }
+        .description {
+            position: absolute;
+            top: 50px;
+            left: 30%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+        .description h1 {
+            color: #000000;
+            font-size: 20px;
+            text-align: left;
         }
     </style>
 </head>
 <body>
-    <div id="container">
+    {% load static %}
+    <div class="description">
         <h1>Import materials from different resources</h1>
-        <a href="{% url 'home' %}" class="btn-link"><button>Generate Notes</button></a>
-        <button>Summarize Notes</button>
+    </div>
+    <img src="{% static '/static/media/import_materials.png' %}" class="image">
+    <div id="container">
+        <div class="card">
+            <h4>Generate notes from youtube videos</h4>
+            <a href="{% url 'home' %}" class="btn-link"><button>Generate Notes</button></a>
+            <img src="{% static '/static/media/import_youtube.jpg' %}" class="image2" alt="YouTube Image">
+        </div>
+        <div class="card">
+            <h4>Generate notes from pdf on you local device</h4>
+            <a href="{% url 'home' %}" class="btn-link"><button>Generate Notes</button></a>
+            <img src="{% static '/static/media/local_device.jpg' %}" class="image2" alt="pdf image">
+        </div>
     </div>
 </body>
 </html>
