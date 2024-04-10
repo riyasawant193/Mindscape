@@ -11,4 +11,5 @@ urlpatterns = [
     path('import_materials', views.import_materials, name='import_materials'),
     path('transcription', views.transcription, name="transcription"),
     path('test', views.test, name="test"),
+    path('youtube', views.youtube, name="youtube"),
 ]
