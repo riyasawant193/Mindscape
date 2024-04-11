@@ -9,6 +9,10 @@ import numpy as np
 from youtube_transcript_api import YouTubeTranscriptApi
 from django.views.decorators.csrf import csrf_exempt
 import fitz
+import sumy
+from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.tokenizers import Tokenizer
+from sumy.summarizers.lsa import LsaSummarizer
 
 
 def homepage(request):
@@ -111,10 +115,15 @@ def generate_summary(request):
             for page in doc:
                 text += page.get_text()
 
-            # Process text to generate a summary (example: first 200 characters)
-            summary = text[:200] + '...'  # Example: Extract first 200 characters as summary
+            # Use Sumy library for text summarization
+            parser = PlaintextParser.from_string(text, Tokenizer('english'))
+            summarizer = LsaSummarizer()
+            summary = summarizer(parser.document, 10)  # Extract 10 sentences as summary
 
-            return JsonResponse({'summary': summary})
+            # Join extracted sentences into a single summary string
+            summary_text = ' '.join(str(sentence) for sentence in summary)
+
+            return JsonResponse({'summary': summary_text})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
     else:

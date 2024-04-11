@@ -98,9 +98,9 @@
             const formData = new FormData();
             const pdfFile = document.getElementById('pdf_file').files[0];
             formData.append('pdf_file', pdfFile);
-        
+    
             const csrftoken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-        
+    
             $.ajax({
                 type: 'POST',
                 url: '{% url "generate_summary" %}',
@@ -117,7 +117,7 @@
                 }
             });
         }
-        
     </script>
+    
 </body>
 </html>
