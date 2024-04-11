@@ -93,32 +93,32 @@ def youtube(request):
     else:
         return render(request, 'escape/youtube.html')
 
+
 @csrf_exempt
-def upload_pdf(request):
-    if request.method == 'POST':
-        if 'pdf_file' in request.FILES:
+def generate_summary(request):
+    if request.method == 'POST' and request.FILES.get('pdf_file'):
+        try:
             pdf_file = request.FILES['pdf_file']
-            # Save the uploaded file temporarily
+
+            # Save the uploaded PDF temporarily
             with open('temp.pdf', 'wb') as f:
                 for chunk in pdf_file.chunks():
                     f.write(chunk)
-            pdf_url = '/escape/temp.pdf'
-            return JsonResponse({'pdf_url': pdf_url})
-        else:
-            return JsonResponse({'error': 'No PDF file found in request'}, status=400)
-    else:
-        # For GET requests, render the pdf_summary.html template
-        return render(request, 'escape/pdf_summary.html')
 
-def generate_summary(request):
-    # Load the uploaded PDF file and generate a summary
-    doc = fitz.open('temp.pdf')
-    text = ""
-    for page in doc:
-        text += page.get_text()
-    # Process text to generate a summary using your preferred method
-    summary = "This is a summary of the PDF content..."
-    return JsonResponse({'summary': summary})
+            # Open the PDF file and extract text content
+            doc = fitz.open('temp.pdf')
+            text = ""
+            for page in doc:
+                text += page.get_text()
+
+            # Process text to generate a summary (example: first 200 characters)
+            summary = text[:200] + '...'  # Example: Extract first 200 characters as summary
+
+            return JsonResponse({'summary': summary})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return render(request, 'escape/pdf_summary.html')
 
 def study_set(request):
     return render(request, 'escape/study_set.html')

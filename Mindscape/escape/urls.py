@@ -12,6 +12,5 @@ urlpatterns = [
     path('transcription', views.transcription, name="transcription"),
     path('test', views.test, name="test"),
     path('youtube', views.youtube, name="youtube"),
-    path('upload_pdf', views.upload_pdf, name='upload_pdf'),
     path('generate_summary', views.generate_summary, name='generate_summary'),
 ]
