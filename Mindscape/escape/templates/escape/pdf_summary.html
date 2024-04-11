@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload and Display PDF</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    {% csrf_token %}
+    <h2>Upload and Display PDF</h2>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" id="pdf_file_input" name="pdf_file">
+        <button onclick="uploadPDF(event)">Upload PDF</button>
+    </form>
+    <div id="pdf_display" style="display: none;">
+        <embed id="pdf_embed" width="800" height="600" type="application/pdf">
+        <button onclick="generateSummary()">Generate Summary</button>
+        <div id="summary_result"></div>
+    </div>
+
+    <script>
+        function uploadPDF(event) {
+            event.preventDefault(); // Prevent the default form submission
+            const formData = new FormData();
+            const pdfFile = document.getElementById('pdf_file_input').files[0];
+            formData.append('pdf_file', pdfFile);
+        
+            // Get CSRF token from the form
+            const csrftoken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        
+            $.ajax({
+                type: 'POST',
+                url: '/escape/upload_pdf/',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {'X-CSRFToken': csrftoken}, // Include CSRF token in headers
+                success: function(response) {
+                    $('#pdf_embed').attr('src', response.pdf_url);
+                    $('#pdf_display').show();
+                },
+                error: function(error) {
+                    alert('Error uploading PDF');
+                }
+            });
+        }
+        
+        
+        function generateSummary() {
+            $.ajax({
+                type: 'POST',
+                url: '/escape/generate_summary/',
+                data: {},
+                success: function(response) {
+                    $('#summary_result').html(response.summary);
+                },
+                error: function(error) {
+                    alert('Error generating summary');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

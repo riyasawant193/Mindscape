@@ -21,5 +21,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('', include('escape.urls')),
-    path('summarizer', include('summarizer.urls')),
 ]

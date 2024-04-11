@@ -3,12 +3,12 @@ from . forms import CreateUserForm, LoginForm
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
-from transformers import pipeline
-from youtube_transcript_api import YouTubeTranscriptApi
-from django.http import JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from transformers import pipeline
 import numpy as np
+from youtube_transcript_api import YouTubeTranscriptApi
+from django.views.decorators.csrf import csrf_exempt
+import fitz
 
 
 def homepage(request):
@@ -93,6 +93,32 @@ def youtube(request):
     else:
         return render(request, 'escape/youtube.html')
 
+@csrf_exempt
+def upload_pdf(request):
+    if request.method == 'POST':
+        if 'pdf_file' in request.FILES:
+            pdf_file = request.FILES['pdf_file']
+            # Save the uploaded file temporarily
+            with open('temp.pdf', 'wb') as f:
+                for chunk in pdf_file.chunks():
+                    f.write(chunk)
+            pdf_url = '/escape/temp.pdf'
+            return JsonResponse({'pdf_url': pdf_url})
+        else:
+            return JsonResponse({'error': 'No PDF file found in request'}, status=400)
+    else:
+        # For GET requests, render the pdf_summary.html template
+        return render(request, 'escape/pdf_summary.html')
+
+def generate_summary(request):
+    # Load the uploaded PDF file and generate a summary
+    doc = fitz.open('temp.pdf')
+    text = ""
+    for page in doc:
+        text += page.get_text()
+    # Process text to generate a summary using your preferred method
+    summary = "This is a summary of the PDF content..."
+    return JsonResponse({'summary': summary})
 
 def study_set(request):
     return render(request, 'escape/study_set.html')
