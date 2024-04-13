@@ -74,6 +74,7 @@
             {% if summary %}
                 <h2>Generated Summary:</h2>
                 <p>{{ summary }}</p>
+                <a href="{% url 'generate_summary' %}?text={{ summary }}" class="btn-link btn.transparent" download>Download Summary (PDF)</a>
             {% endif %} 
         </div>
     </div>
